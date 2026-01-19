@@ -1,4 +1,4 @@
--- Créer la table Dish
+
 CREATE TABLE IF NOT EXISTS dish (
     id_dish SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,

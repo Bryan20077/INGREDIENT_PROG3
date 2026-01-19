@@ -28,7 +28,7 @@ public class Main {
             System.out.println("\n========== COÛT DES RECETTES ==========");
             for (Recipe recipe : dao.getAllRecipes()) {
                 double cost = dao.getRecipeCost(recipe.getIdRecipe());
-                System.out.println(recipe.getName() + ": " + String.format("%.2f €", cost));
+                System.out.println(recipe.getName() + ": " + String.format("%.2f", cost));
             }
 
             System.out.println("\n========== RECETTES CONTENANT LA FARINE ==========");
@@ -57,7 +57,7 @@ public class Main {
             if (details != null) {
                 System.out.println("Recette: " + details.getRecipe().getName());
                 System.out.println("Nombre d'ingrédients: " + details.getIngredients().size());
-                System.out.println("Coût total: " + String.format("%.2f €", details.getTotalCost()));
+                System.out.println("Coût total: " + String.format("%.2f", details.getTotalCost()));
             }
 
             // ========== TESTS POUR LES PLATS ==========
@@ -109,7 +109,7 @@ public class Main {
             }
 
             connection.close();
-            System.out.println("\n✓ Programme terminé avec succès!");
+            System.out.println("Programme terminé avec succès!");
 
         } catch (ClassNotFoundException e) {
             System.err.println("Erreur: Driver PostgreSQL non trouvé!");

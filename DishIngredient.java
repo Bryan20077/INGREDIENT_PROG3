@@ -1,6 +1,4 @@
-/**
- * Classe représentant la relation entre un plat et un ingrédient
- */
+
 public class DishIngredient {
     private int idSerial;
     private int idDish;
