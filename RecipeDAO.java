@@ -2,9 +2,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Classe DAO pour gérer les opérations JDBC avec la base de données
- */
+
 public class RecipeDAO {
     private Connection connection;
 
@@ -12,11 +10,6 @@ public class RecipeDAO {
         this.connection = connection;
     }
 
-    // ============ RECETTES ============
-
-    /**
-     * Ajouter une nouvelle recette
-     */
     public void addRecipe(Recipe recipe) throws SQLException {
         String sql = "INSERT INTO recipe (name, difficulty, nb_persons, nb_kcal) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -34,9 +27,6 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Récupérer toutes les recettes
-     */
     public List<Recipe> getAllRecipes() throws SQLException {
         List<Recipe> recipes = new ArrayList<>();
         String sql = "SELECT * FROM recipe";
@@ -55,9 +45,7 @@ public class RecipeDAO {
         return recipes;
     }
 
-    /**
-     * Récupérer une recette par ID
-     */
+   
     public Recipe getRecipeById(int id) throws SQLException {
         String sql = "SELECT * FROM recipe WHERE id_recipe = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -77,9 +65,7 @@ public class RecipeDAO {
         return null;
     }
 
-    /**
-     * Mettre à jour une recette
-     */
+ 
     public void updateRecipe(Recipe recipe) throws SQLException {
         String sql = "UPDATE recipe SET name = ?, difficulty = ?, nb_persons = ?, nb_kcal = ? WHERE id_recipe = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -92,9 +78,7 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Supprimer une recette
-     */
+    
     public void deleteRecipe(int id) throws SQLException {
         String sql = "DELETE FROM recipe WHERE id_recipe = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -103,11 +87,7 @@ public class RecipeDAO {
         }
     }
 
-    // ============ INGRÉDIENTS ============
-
-    /**
-     * Ajouter un nouvel ingrédient
-     */
+ 
     public void addIngredient(Ingredient ingredient) throws SQLException {
         String sql = "INSERT INTO ingredient (name, unit, price) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -124,9 +104,7 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Récupérer tous les ingrédients
-     */
+
     public List<Ingredient> getAllIngredients() throws SQLException {
         List<Ingredient> ingredients = new ArrayList<>();
         String sql = "SELECT * FROM ingredient";
@@ -144,9 +122,7 @@ public class RecipeDAO {
         return ingredients;
     }
 
-    /**
-     * Récupérer un ingrédient par ID
-     */
+
     public Ingredient getIngredientById(int id) throws SQLException {
         String sql = "SELECT * FROM ingredient WHERE id_ingredient = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -165,9 +141,7 @@ public class RecipeDAO {
         return null;
     }
 
-    /**
-     * Mettre à jour un ingrédient
-     */
+
     public void updateIngredient(Ingredient ingredient) throws SQLException {
         String sql = "UPDATE ingredient SET name = ?, unit = ?, price = ? WHERE id_ingredient = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -179,9 +153,7 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Supprimer un ingrédient
-     */
+
     public void deleteIngredient(int id) throws SQLException {
         String sql = "DELETE FROM ingredient WHERE id_ingredient = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -190,11 +162,7 @@ public class RecipeDAO {
         }
     }
 
-    // ============ RELATIONS MANY-TO-MANY ============
 
-    /**
-     * Ajouter un ingrédient à une recette
-     */
     public void addIngredientToRecipe(int recipeId, int ingredientId, double quantity) throws SQLException {
         String sql = "INSERT INTO recipe_ingredient (id_recipe, id_ingredient, quantity) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -205,9 +173,6 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Récupérer tous les ingrédients d'une recette
-     */
     public List<RecipeIngredient> getIngredientsForRecipe(int recipeId) throws SQLException {
         List<RecipeIngredient> ingredients = new ArrayList<>();
         String sql = "SELECT ri.*, i.name, i.unit, i.price FROM recipe_ingredient ri " +
@@ -235,9 +200,6 @@ public class RecipeDAO {
         return ingredients;
     }
 
-    /**
-     * Récupérer toutes les recettes contenant un ingrédient spécifique
-     */
     public List<Recipe> getRecipesWithIngredient(int ingredientId) throws SQLException {
         List<Recipe> recipes = new ArrayList<>();
         String sql = "SELECT DISTINCT r.* FROM recipe r " +
@@ -260,9 +222,6 @@ public class RecipeDAO {
         return recipes;
     }
 
-    /**
-     * Supprimer un ingrédient d'une recette
-     */
     public void removeIngredientFromRecipe(int recipeId, int ingredientId) throws SQLException {
         String sql = "DELETE FROM recipe_ingredient WHERE id_recipe = ? AND id_ingredient = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -272,9 +231,7 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Mettre à jour la quantité d'un ingrédient dans une recette
-     */
+
     public void updateQuantityInRecipe(int recipeId, int ingredientId, double quantity) throws SQLException {
         String sql = "UPDATE recipe_ingredient SET quantity = ? WHERE id_recipe = ? AND id_ingredient = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -285,9 +242,7 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Calculer le coût total d'une recette
-     */
+
     public double getRecipeCost(int recipeId) throws SQLException {
         String sql = "SELECT SUM(ri.quantity * i.price) as total_cost FROM recipe_ingredient ri " +
                 "JOIN ingredient i ON ri.id_ingredient = i.id_ingredient " +
@@ -303,9 +258,7 @@ public class RecipeDAO {
         return 0;
     }
 
-    /**
-     * Obtenir les détails complets d'une recette avec ses ingrédients
-     */
+
     public RecipeDetails getRecipeDetails(int recipeId) throws SQLException {
         Recipe recipe = getRecipeById(recipeId);
         if (recipe == null) return null;
@@ -316,11 +269,7 @@ public class RecipeDAO {
         return new RecipeDetails(recipe, ingredients, cost);
     }
 
-    // ============ PLATS (DISH) ============
 
-    /**
-     * Ajouter un nouveau plat
-     */
     public void addDish(Dish dish) throws SQLException {
         String sql = "INSERT INTO dish (name, dish_type, selling_price) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -341,9 +290,7 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Récupérer tous les plats
-     */
+
     public List<Dish> getAllDishes() throws SQLException {
         List<Dish> dishes = new ArrayList<>();
         String sql = "SELECT * FROM dish";
@@ -365,9 +312,7 @@ public class RecipeDAO {
         return dishes;
     }
 
-    /**
-     * Récupérer un plat par ID
-     */
+
     public Dish getDishById(int id) throws SQLException {
         String sql = "SELECT * FROM dish WHERE id_dish = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -390,9 +335,7 @@ public class RecipeDAO {
         return null;
     }
 
-    /**
-     * Mettre à jour un plat
-     */
+
     public void updateDish(Dish dish) throws SQLException {
         String sql = "UPDATE dish SET name = ?, dish_type = ?, selling_price = ? WHERE id_dish = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -408,9 +351,7 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Supprimer un plat
-     */
+
     public void deleteDish(int id) throws SQLException {
         String sql = "DELETE FROM dish WHERE id_dish = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -419,11 +360,7 @@ public class RecipeDAO {
         }
     }
 
-    // ============ RELATIONS DISH-INGREDIENT ============
 
-    /**
-     * Ajouter un ingrédient à un plat
-     */
     public void addIngredientToDish(int dishId, int ingredientId, double quantityRequired, String unit) throws SQLException {
         String sql = "INSERT INTO dish_ingredient (id_dish, id_ingredient, quantity_required, unit) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -435,9 +372,7 @@ public class RecipeDAO {
         }
     }
 
-    /**
-     * Récupérer tous les ingrédients d'un plat
-     */
+
     public List<DishIngredient> getIngredientsForDish(int dishId) throws SQLException {
         List<DishIngredient> ingredients = new ArrayList<>();
         String sql = "SELECT * FROM dish_ingredient WHERE id_dish = ?";
@@ -458,9 +393,30 @@ public class RecipeDAO {
         return ingredients;
     }
 
-    /**
-     * Calculer le coût total d'un plat (avec les quantités requises)
-     */
+        public List<DishIngredient> findDishIngredientByDishId(Integer dishId) throws SQLException {
+        List<DishIngredient> dishIngredients = new ArrayList<>();
+        String sql = "SELECT di.id_serial, di.id_dish, di.id_ingredient, di.quantity_required, di.unit " +
+                "FROM dish_ingredient di " +
+                "JOIN ingredient i ON di.id_ingredient = i.id_ingredient " +
+                "JOIN dish d ON di.id_dish = d.id_dish " +
+                "WHERE di.id_dish = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, dishId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    dishIngredients.add(new DishIngredient(
+                            rs.getInt("id_serial"),
+                            rs.getInt("id_dish"),
+                            rs.getInt("id_ingredient"),
+                            rs.getDouble("quantity_required"),
+                            rs.getString("unit")
+                    ));
+                }
+            }
+        }
+        return dishIngredients;
+    }
+
     public double getDishCost(int dishId) throws SQLException {
         String sql = "SELECT SUM(di.quantity_required * i.price) as total_cost FROM dish_ingredient di " +
                 "JOIN ingredient i ON di.id_ingredient = i.id_ingredient " +
@@ -477,23 +433,18 @@ public class RecipeDAO {
         return 0;
     }
 
-    /**
-     * Calculer la marge brute d'un plat
-     * Marge = Prix de vente - Coût total
-     */
+
     public double getDishGrossMargin(int dishId) throws SQLException {
         Dish dish = getDishById(dishId);
         if (dish == null || dish.getSellingPrice() == null) {
-            return 0; // Retourner 0 si le prix de vente est NULL
+            return 0; 
         }
         
         double cost = getDishCost(dishId);
         return dish.getSellingPrice() - cost;
     }
 
-    /**
-     * Récupérer tous les plats avec leurs coûts et marges
-     */
+
     public List<String> getDishesWithDetails() throws SQLException {
         List<String> details = new ArrayList<>();
         List<Dish> dishes = getAllDishes();
